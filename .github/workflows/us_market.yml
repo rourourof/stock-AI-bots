@@ -1,15 +1,15 @@
-name: US Market Review Bot
+name: US Market Review (Semiconductor & NVDA)
 
 on:
   schedule:
     # 18:07 JST = 09:07 UTC
     - cron: '7 9 * * 1-5'
-    # 6:07 JST = 21:07 UTC (前日)
+    # 6:07 JST = 21:07 UTC
     - cron: '7 21 * * 1-5'
   workflow_dispatch:
 
 jobs:
-  run:
+  market:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,13 +21,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
+      - name: Install libraries
         run: |
-          pip install yfinance requests openai pytz
+          pip install yfinance requests google-generativeai pytz
 
-      - name: Run market bot
+      - name: Run bot
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python main.py
