@@ -1,5 +1,5 @@
-import requests
 import os
+import requests
 
 def post_discord(text):
     url = os.getenv("DISCORD_WEBHOOK_URL")
