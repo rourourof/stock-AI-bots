@@ -1,16 +1,18 @@
 import os
-import openai
-from template import build_prompt
+import google.generativeai as genai
+from prompt_builder import build_prompt
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-pro",
+    generation_config={
+        "temperature": 0.2,
+        "max_output_tokens": 4096
+    }
+)
 
 def generate_text(data, mode, prev):
     prompt = build_prompt(data, mode, prev)
-
-    res = openai.ChatCompletion.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.2
-    )
-
-    return res.choices[0].message.content
+    response = model.generate_content(prompt)
+    return response.text
